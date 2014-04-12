@@ -1,0 +1,304 @@
+<head>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap-theme.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
+<link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/sticky-footer.css" rel="stylesheet">
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="js/bootstrap/bootstrap.js"></script>
+<script src="js/bootstrap/bootstrap.min.js"></script>
+
+<script>
+
+var multiply=0;
+var i=[240,240,240];
+
+function in_range(satelite){
+	/*top:425px;left:685px;
+	top:220px;left:150px;
+	top:475px;left:300px;
+	top:250px;left:450px;*/
+	//trans2 124 * 102
+	var left = satelite.position().left;
+	var top = satelite.position().top;
+	
+	//console.log("Hello");
+	//console.log("Left| " + left + " Right| " + top);
+	
+	//First Ground Station
+	if(left < (685+102) && left > (685-102) ){
+		if(top < (425+124) && top > (425-124) ){
+			//console.log("first match| " + satelite.attr("id"));
+			add_Table_content("G1",satelite.attr("id"),"Hello1");
+			return true;
+		}
+	}
+	
+	//Second Ground Station
+	if(left < (150+102) && left > (150-102) ){
+		if(top < (220+124) && top > (220-124) ){
+			//console.log("second match| " + satelite.attr("id"));
+			add_Table_content("G2",satelite.attr("id"),"Hello2");
+			return true;
+		}
+	}
+	
+	//Third Ground Station
+	if(left < (300+102) && left > (300-102) ){
+		if(top < (475+124) && top > (475-124) ){
+			//console.log("third match| " + satelite.attr("id"));
+			add_Table_content("G3",satelite.attr("id"),"Hello3");
+			return true;
+		}
+	}
+	
+	//Fourth Ground Station
+	if(left < (450+102) && left > (450-102) ){
+		if(top < (475+220) && top > (475-220) ){
+			//console.log("fourth match| " + satelite.attr("id"));
+			add_Table_content("G4",satelite.attr("id"),"Hello4");
+			return true;
+		}
+	}
+	return false;
+}
+
+function add_Table_content(ground,id,temp){
+	var record = "<tr>" + 
+				 "<td>" + ground + "</td>";
+				 
+				 if(id==0){
+					 record += "<td>" + id + "</td>" +
+					 "<td>" + "NaN" + "</td>" +
+					 "<td>" + "NaN" + "</td>" +
+					 "<td>" + "NaN" + "</td>";
+				 }
+				 else if(id==1){
+					 record += "<td>" + "NaN" + "</td>" +
+					 "<td>" + id + "</td>" +
+					 "<td>" + "NaN" + "</td>" +
+					 "<td>" + "NaN" + "</td>";
+				 }
+				 else if(id==2){
+					 record += "<td>" + "NaN" + "</td>" +
+					 "<td>" + "NaN" + "</td>" +
+					 "<td>" + id + "</td>" +
+					 "<td>" + "NaN" + "</td>";
+					 
+				 }
+				 else{
+					 record += "<td>" + "NaN" + "</td>" +
+					 "<td>" + "NaN" + "</td>" +
+					 "<td>" + "NaN" + "</td>" +
+					 "<td>" + id + "</td>";
+				 }
+				 
+				 record +="</tr>";
+				 
+	
+	console.log("record");
+	console.log(record);
+	
+	$('#table_content').append(	record );
+}
+
+var rnd = 0;
+
+function move_satellite(satelite){
+	//console.log("Moving Satellite| " + $(satelite).attr("id"));
+	
+	id = satelite.attr("id");
+	
+	if(rnd %5 == 0 ){
+		if(in_range(satelite)){
+			console.log("true");
+			$('#trans1').children().attr('src','images/tran_g.png');
+			$('#trans2').children().attr('src','images/tran_g.png');
+			$('#trans3').children().attr('src','images/tran_g.png');
+			$('#trans4').children().attr('src','images/tran_g.png');
+		}
+		else{
+			console.log("false");
+			$('#trans1').children().attr('src','images/tran_b.png');
+			$('#trans2').children().attr('src','images/tran_b.png');
+			$('#trans3').children().attr('src','images/tran_b.png');
+			$('#trans4').children().attr('src','images/tran_b.png');
+		}
+	}
+	
+	rnd++;
+	
+	ileft = 4*i[id] - 200*id;
+	itop = 280 + (54.5 - 2*(160 * fun1( (ileft + multiply*192.981) /160)) );
+	i[id]--;
+	
+	if(i[id] == 0){
+		console.log("done| " + id);
+		i[id]=240;
+		multiply ++;
+		
+		//change_size(multiply);
+		//draw();
+		move_satellite(satelite);
+		return;
+	}
+	
+	$(satelite).animate({
+		top : itop,
+		left: ileft,
+		easing : true}, 50,
+		function() {move_satellite($(satelite))}
+	)
+	
+}
+
+function change_size(){
+	console.log("Changing size| " + (960 - (multiply * 192.981)) );
+	$('#canvas').attr('width',960 - (multiply * 192.981))	
+}
+
+function fun1(x) {return Math.sin(x-45);  }
+
+function draw() {
+ var canvas = document.getElementById("canvas");
+ if (null==canvas || !canvas.getContext) return;
+
+ var axes={}, ctx=canvas.getContext("2d");
+ //axes.x0 = .5 + .5*canvas.width;  // x0 pixels from left to x=0 
+ axes.x0 = 0 - multiply*192.981;
+ axes.y0 = .5 + .5*canvas.height; // y0 pixels from top to y=0
+ axes.scale = 20;                 // 40 pixels from x=0 to x=1
+ axes.doNegativeX = true;
+
+ //showAxes(ctx,axes);
+ funGraph(ctx,axes,fun1,"rgb(247,11,11)",1); 
+}
+
+function make_rag(){
+	$(".transmeter").animate({
+		"padding":'0px',
+		"margin":'35px',
+		easing : true}, 1000,
+		function() {}
+	).delay( 10 ).animate({
+		"padding":'35px',
+		"margin":'0px',
+		easing : true}, 1000,
+		function() {make_rag()}
+	)  	.delay( 10 );
+}
+
+function funGraph (ctx,axes,func,color,thick) {
+ var dx=4, x0=axes.x0, y0=axes.y0, scale=axes.scale*8;
+ var iMax = Math.round((ctx.canvas.width-x0)/dx);
+ var iMin = axes.doNegativeX ? Math.round(-x0/dx) : 0;
+ ctx.beginPath();
+ ctx.lineWidth = thick;
+ ctx.strokeStyle = color;
+ 
+ var j=iMax;
+ 
+ for (var i=iMin;i<=iMax;i++) {
+	xx0 = dx*j; yy0 = 2*(scale*func(xx0/scale));
+	xx1 = dx*j-50; yy1 = yy0 + 100;
+	xx2 = dx*j-100; yy2 = yy0 - 100; 
+	 
+  	j--;
+	
+  if (i==iMin){
+	  ctx.moveTo(x0+xx0,y0-yy0);
+	  ctx.moveTo(x0+xx1,y0-yy1);
+	  ctx.moveTo(x0+xx2,y0-yy2);		  
+  }
+  else { 
+		ctx.lineTo(x0+xx0,y0-yy0);
+		ctx.lineTo(x0+xx1,y0-yy1);
+		ctx.lineTo(x0+xx2,y0-yy2);
+		//console.log("fun| X| " + (x0+xx) + "  Y| " + (y0-yy));
+	}
+ }
+ ctx.stroke();
+ 
+ 
+ 
+}
+
+$(document).ready(function() {
+	make_rag();
+	//draw();
+	move_satellite($('#0'));
+	move_satellite($('#1'));
+	move_satellite($('#2'));
+});
+
+</script>
+
+<style>
+.trans{
+	width: 25px;
+	height: 30px;
+}
+#mapBody{
+	width:960px;
+	height:720px;
+}
+.transmeter{
+	margin:35px;
+	margin-left:0px;
+	margin-top:0px;
+	border: 1px #f50303 dashed;
+	border-radius: 50%;
+	width: 52px;
+	text-align: center;	
+}
+
+.transmeter, .satellite{
+	position:absolute;
+}
+
+#sin_wave{
+	position: absolute;
+	left: 8px;
+	top: 0px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="content">
+    <div id="mapBody" style="background:url(images/map.jpg);">
+        <div id="trans1" class="transmeter" style="top:425px;left:685px;"><img class="trans" src="images/tran_b.png" /></div>
+        <div id="trans2" class="transmeter" style="top:220px;left:150px;"><img class="trans" src="images/tran_b.png" /></div>
+        <div id="trans3" class="transmeter" style="top:475px;left:300px;"><img class="trans" src="images/tran_b.png" /></div>
+        <div id="trans4" class="transmeter" style="top:250px;left:450px;"><img class="trans" src="images/tran_b.png" /></div>
+        <div id="0" class="satellite" style="top:402px;left:668.6px;"><input type="hidden" value="Qatar C1 134540v 14030A 14 00000 S293 213540 90.0000 <br /> 90.0000 00003032 90.21 269.79 15.69" /> <img src="images/satellite.png"/></div>
+        <div id="1" class="satellite" style="top:402px;left:668.6px;"><input type="hidden" value="Qatar C2 134540v 14030A 14 00000 S293 213540 90.0000 <br /> 90.0000 00003032 90.21 269.79 15.69" /><img src="images/satellite.png"/></div>
+        <div id="2" class="satellite" style="top:402px;left:668.6px;"><input type="hidden" value="Qatar C3 134540v 14030A 14 00000 S293 213540 90.0000 <br /> 90.0000 00003032 90.21 269.79 15.69" /><img src="images/satellite.png"/></div>
+    </div>
+    
+    <div id="sin_wave">
+    	<canvas id="canvas" width="960px" height="720px" style="float:left"></canvas>
+    </div>
+    
+    <div id="" style="float:left; clear:both; margin-top:55px">
+    <table id="satellites" class="table">
+    	<tbody id="table_content">
+        	<tr><th>Ground Station</th><th>Satalite 1</th><th>Satalite 2</th><th>Satalite 3</th></tr>
+        </tbody>
+    </table>
+    </div>
+    
+
+</div>
+
+</body>
+
