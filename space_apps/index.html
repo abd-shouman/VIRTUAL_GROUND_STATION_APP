@@ -76,27 +76,17 @@ function add_Table_content(ground,id,temp){
 				 if(id==0){
 					 record += "<td>" + id + "</td>" +
 					 "<td>" + "NaN" + "</td>" +
-					 "<td>" + "NaN" + "</td>" +
-					 "<td>" + "NaN" + "</td>";
+					 "<td>" + "NaN" + "</td>" 
 				 }
 				 else if(id==1){
 					 record += "<td>" + "NaN" + "</td>" +
 					 "<td>" + id + "</td>" +
-					 "<td>" + "NaN" + "</td>" +
-					 "<td>" + "NaN" + "</td>";
+					 "<td>" + "NaN" + "</td>" 
 				 }
 				 else if(id==2){
 					 record += "<td>" + "NaN" + "</td>" +
 					 "<td>" + "NaN" + "</td>" +
-					 "<td>" + id + "</td>" +
-					 "<td>" + "NaN" + "</td>";
-					 
-				 }
-				 else{
-					 record += "<td>" + "NaN" + "</td>" +
-					 "<td>" + "NaN" + "</td>" +
-					 "<td>" + "NaN" + "</td>" +
-					 "<td>" + id + "</td>";
+					 "<td>" + id + "</td>"
 				 }
 				 
 				 record +="</tr>";
@@ -268,6 +258,10 @@ $(document).ready(function() {
 	top: 0px;
 }
 
+#results{
+	height: 600px;	
+}
+
 </style>
 
 </head>
@@ -275,7 +269,7 @@ $(document).ready(function() {
 <body>
 
 <div id="content">
-    <div id="mapBody" style="background:url(images/map.jpg);">
+    <div id="mapBody" style="background:url(images/map.jpg); float:left">
         <div id="trans1" class="transmeter" style="top:425px;left:685px;"><img class="trans" src="images/tran_b.png" /></div>
         <div id="trans2" class="transmeter" style="top:220px;left:150px;"><img class="trans" src="images/tran_b.png" /></div>
         <div id="trans3" class="transmeter" style="top:475px;left:300px;"><img class="trans" src="images/tran_b.png" /></div>
@@ -289,7 +283,7 @@ $(document).ready(function() {
     	<canvas id="canvas" width="960px" height="720px" style="float:left"></canvas>
     </div>
     
-    <div id="" style="float:left; clear:both; margin-top:55px">
+    <div id="results" style="float:left; margin-left: 60px; margin-top:55px; overflow:auto" >
     <table id="satellites" class="table">
     	<tbody id="table_content">
         	<tr><th>Ground Station</th><th>Satalite 1</th><th>Satalite 2</th><th>Satalite 3</th></tr>
@@ -301,4 +295,3 @@ $(document).ready(function() {
 </div>
 
 </body>
-
